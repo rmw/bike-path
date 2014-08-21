@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Icl-rY-jN6">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--Results Map View Controller - Directions-->
+        <scene sceneID="y25-Gz-VHz">
+            <objects>
+                <viewController id="StR-Yi-Gvc" customClass="ResultsMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gkH-hp-aio"/>
+                        <viewControllerLayoutGuide type="bottom" id="doY-Pr-8J5"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="iVa-G1-NWu" customClass="GMSMapView">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Directions" id="TcU-1J-CRn">
+                        <barButtonItem key="leftBarButtonItem" image="backarrow" id="38F-3W-mvs">
+                            <connections>
+                                <segue destination="G0S-6X-bg1" kind="unwind" unwindAction="unwindToSearchPage:" id="mtr-0s-eLm"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="9ZU-FS-WQJ">
+                            <connections>
+                                <segue destination="Icl-rY-jN6" kind="modal" id="f6B-aY-a8Z"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="mapView" destination="iVa-G1-NWu" id="Wg6-Kz-Xb5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ijX-LB-Qyj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="G0S-6X-bg1" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-143" y="-923"/>
+        </scene>
+        <!--Search Map View Controller - Get Directions-->
+        <scene sceneID="uBy-pW-Yuz">
+            <objects>
+                <viewController id="nM0-WI-Oec" customClass="SearchMapViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Pbr-VN-JDE"/>
+                        <viewControllerLayoutGuide type="bottom" id="hYZ-xm-PYs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eN0-HA-GRj">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="cSr-Qj-LBq">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="nM0-WI-Oec" id="d9c-1A-Qck"/>
+                                </connections>
+                            </searchBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gQv-q2-UI5" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="44" width="320" height="460"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="cSr-Qj-LBq" firstAttribute="top" secondItem="eN0-HA-GRj" secondAttribute="top" id="1Ku-bX-oLb"/>
+                            <constraint firstAttribute="trailing" secondItem="cSr-Qj-LBq" secondAttribute="trailing" id="3zo-5H-wUO"/>
+                            <constraint firstItem="cSr-Qj-LBq" firstAttribute="bottom" secondItem="gQv-q2-UI5" secondAttribute="top" id="9cZ-zG-YwJ"/>
+                            <constraint firstItem="gQv-q2-UI5" firstAttribute="leading" secondItem="eN0-HA-GRj" secondAttribute="leading" id="KCd-oT-SfZ"/>
+                            <constraint firstItem="cSr-Qj-LBq" firstAttribute="leading" secondItem="gQv-q2-UI5" secondAttribute="leading" id="MKC-Z7-bMr"/>
+                            <constraint firstAttribute="bottom" secondItem="gQv-q2-UI5" secondAttribute="bottom" id="WZc-PU-23E"/>
+                            <constraint firstItem="cSr-Qj-LBq" firstAttribute="trailing" secondItem="gQv-q2-UI5" secondAttribute="trailing" id="tXH-2g-h78"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Get Directions" id="EoJ-yJ-sBB"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="mapView" destination="gQv-q2-UI5" id="byq-KE-Ydp"/>
+                        <outlet property="searchDisplayController" destination="ILt-Qt-4zx" id="f6b-kj-bkt"/>
+                        <segue destination="StR-Yi-Gvc" kind="push" identifier="showResults" id="WtO-WB-Mu6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="M7r-03-6kQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="ILt-Qt-4zx">
+                    <connections>
+                        <outlet property="delegate" destination="nM0-WI-Oec" id="idU-D8-h1T"/>
+                        <outlet property="searchBar" destination="cSr-Qj-LBq" id="0tY-kW-4oQ"/>
+                        <outlet property="searchContentsController" destination="nM0-WI-Oec" id="xOL-2v-I1h"/>
+                        <outlet property="searchResultsDataSource" destination="nM0-WI-Oec" id="F6b-o4-lWS"/>
+                        <outlet property="searchResultsDelegate" destination="nM0-WI-Oec" id="Br4-7q-gx2"/>
+                    </connections>
+                </searchDisplayController>
+            </objects>
+            <point key="canvasLocation" x="-611" y="-923"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Ntl-jZ-pu8">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Icl-rY-jN6" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="E9u-0I-AuQ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="gwJ-1k-IZN">
+                        <rect key="frame" x="0.0" y="436" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="nM0-WI-Oec" kind="relationship" relationship="rootViewController" id="Rfv-aX-QIh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qVs-tJ-rn4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1066" y="-931"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="backarrow" width="36" height="36"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

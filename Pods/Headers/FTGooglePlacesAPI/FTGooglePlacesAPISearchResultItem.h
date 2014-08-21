@@ -1,0 +1,1 @@
+../../FTGooglePlacesAPI/FTGooglePlacesAPI/FTGooglePlacesAPISearchResultItem.h

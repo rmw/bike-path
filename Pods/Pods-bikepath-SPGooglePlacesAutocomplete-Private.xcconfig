@@ -1,0 +1,5 @@
+#include "Pods-bikepath-SPGooglePlacesAutocomplete.xcconfig"
+GCC_PREPROCESSOR_DEFINITIONS = COCOAPODS=1
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/SPGooglePlacesAutocomplete" "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/FTGooglePlacesAPI" "${PODS_ROOT}/Headers/Kiwi" "${PODS_ROOT}/Headers/SPGooglePlacesAutocomplete"
+OTHER_LDFLAGS = -ObjC ${PODS_BIKEPATH_SPGOOGLEPLACESAUTOCOMPLETE_OTHER_LDFLAGS}
+PODS_ROOT = ${SRCROOT}

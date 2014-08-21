@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<<<<<<< HEAD:bikepath.xcodeproj/xcuserdata/fma2.xcuserdatad/xcschemes/xcschememanagement.plist
+	<key>SchemeUserState</key>
+	<dict>
+		<key>bikepath.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>bikepath.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+=======
+>>>>>>> master:Pods/Pods.xcodeproj/xcuserdata/apprentice.xcuserdatad/xcschemes/xcschememanagement.plist
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>054C4A12BDD043239A6E9D90</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C008DEBDF06A4FFBB2B9A56A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

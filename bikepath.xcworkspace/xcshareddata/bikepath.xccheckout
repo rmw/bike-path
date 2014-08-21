@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D8F77FCE-19A7-4B7D-AAF7-F1B00693B0BA</string>
+	<key>IDESourceControlProjectName</key>
+	<string>bikepath</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</key>
+		<string>https://github.com/vivekmgeorge/bike-path.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>bikepath.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/vivekmgeorge/bike-path.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</string>
+			<key>IDESourceControlWCCName</key>
+			<string>bike-path</string>
+		</dict>
+	</array>
+</dict>
+</plist>
