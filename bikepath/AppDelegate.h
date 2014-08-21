@@ -11,5 +11,9 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) NSURLCache *citiBikeCache;
+@property (nonatomic, retain) NSArray *stationJSON;
+
+-(NSArray*)loadCitiBikeData;
 
 @end

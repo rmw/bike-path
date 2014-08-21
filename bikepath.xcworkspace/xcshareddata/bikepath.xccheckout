@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>45D68C8C-38F4-47F7-8C3B-196E43494C95</string>
+	<string>D8F77FCE-19A7-4B7D-AAF7-F1B00693B0BA</string>
 	<key>IDESourceControlProjectName</key>
 	<string>bikepath</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>C38EAA74-A26F-446A-83C7-E83E3D16AF7F</key>
-		<string>https://github.com/fma2/bike-path.git</string>
+		<key>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</key>
+		<string>https://github.com/vivekmgeorge/bike-path.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>bikepath.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>C38EAA74-A26F-446A-83C7-E83E3D16AF7F</key>
+		<key>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/fma2/bike-path.git</string>
+	<string>https://github.com/vivekmgeorge/bike-path.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>C38EAA74-A26F-446A-83C7-E83E3D16AF7F</string>
+	<string>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>C38EAA74-A26F-446A-83C7-E83E3D16AF7F</string>
+			<string>AE4D2D4D-29D8-426B-AA6D-E0A0EC92FBAD</string>
 			<key>IDESourceControlWCCName</key>
-			<string>bikepath</string>
+			<string>bike-path</string>
 		</dict>
 	</array>
 </dict>

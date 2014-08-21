@@ -12,6 +12,10 @@
 #import <Foundation/Foundation.h>
 #import "MDDirectionService.h"
 #import <CoreLocation/CoreLocation.h>
+#import "AppDelegate.h"
+#import "StationFinder.h"
+#import "GMSMarkerFactory.h"
+#import "ErrorMessage.h"
 
 @interface ResultsMapViewController () {
     GMSMapView *mapView_;
@@ -23,179 +27,174 @@
 
 @implementation ResultsMapViewController
 
-
-- (IBAction)unwindToSearchPage:(UIStoryboardSegue *)segue{
-    
-}
+- (IBAction)unwindToSearchPage:(UIStoryboardSegue *)segue {}
 
 - (NSString *)deviceLocation {
     return [NSString stringWithFormat:@"latitude: %f longitude: %f", locationManager.location.coordinate.latitude, locationManager.location.coordinate.longitude];
 }
 
-- (void)viewDidLoad{
-    [super viewDidLoad];
+-(void)buttonPressed {
+    NSURL *testURL = [NSURL URLWithString:@"comgooglemaps-x-callback://"];
+    if ([[UIApplication sharedApplication] canOpenURL:testURL]) {
+        AppDelegate *appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSArray *stations = appDel.stationJSON;
+        CLLocationCoordinate2D createEndLocation = CLLocationCoordinate2DMake(self.item.lati, self.item.longi);
+        CLLocation *endLocation = [[CLLocation alloc] initWithLatitude:createEndLocation.latitude
+                                                             longitude:createEndLocation.longitude];
     
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters; // 100 m
-    [locationManager startUpdatingLocation];
-    
-    waypoints_ = [[NSMutableArray alloc]init];
-    waypointStrings_ = [[NSMutableArray alloc]init];
-    
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:40.706638
-                                                            longitude:-74.009070
+        NSDictionary *endStationforNav = [StationFinder findClosestStation:stations location:endLocation];
+
+        NSString *callBackUrl = @"comgooglemaps-x-callback://";
+        CLLocationDegrees endLati = [[endStationforNav objectForKey:@"latitude"] doubleValue];
+        CLLocationDegrees endLongi = [[endStationforNav objectForKey:@"longitude"] doubleValue];
+        NSString *directionsMode = @"&directionsmode=bicycling&zoom=17";
+        NSString *appConnection = @"&x-success=sourceapp://?resume=true&x-source=bike-path.bikepath";
+        NSString *directions = [[NSString alloc] initWithFormat: @"%@?daddr=%f,%f%@%@", callBackUrl, endLati, endLongi, directionsMode, appConnection];
+
+        NSString *directionsRequest = directions;
+        NSURL *directionsURL = [NSURL URLWithString:directionsRequest];
+        [[UIApplication sharedApplication] openURL:directionsURL];
+    } else {
+        NSLog(@"Can't use comgooglemaps-x-callback:// on this device.");
+    }
+}
+
+- (void) initMap:(CLLocationCoordinate2D)userLocation {
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:userLocation.latitude
+                                                            longitude:userLocation.longitude
                                                                  zoom:13];
     mapView_ = [GMSMapView mapWithFrame:CGRectZero camera:camera];
+
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    button.frame = CGRectMake(250, 500, 64, 64);
+    [button setImage:[UIImage imageNamed:@"navButton"] forState:UIControlStateNormal];
+    
+    [button addTarget:self action:@selector(buttonPressed)
+     forControlEvents:UIControlEventTouchUpInside];
+    
     mapView_.delegate = self;
     self.view = mapView_;
+    [mapView_ addSubview:button];
+    return;
+}
 
+- (void)currentUserLocation {
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.distanceFilter = kCLDistanceFilterNone; // whenever we move
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    [locationManager startUpdatingLocation];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UIImage* logoImage = [UIImage imageNamed:@"titleicon2"];
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:logoImage];
+    
+    AppDelegate *appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDel loadCitiBikeData];
+
+    [self currentUserLocation];
     CLLocationCoordinate2D startPosition = locationManager.location.coordinate;
-    GMSMarker *startPoint = [GMSMarker markerWithPosition:startPosition];
-    startPoint.title = @"Start";
-    startPoint.map = mapView_;
+    CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:startPosition.latitude
+                                                             longitude:startPosition.longitude];
+    [self initMap:startPosition];
+
+    waypoints_ = [[NSMutableArray alloc]init];
+
+    GMSMarker *startPoint = [GMSMarkerFactory createGMSMarker:startPosition
+                                                      mapView:mapView_
+                                                        title:@"Start"
+                                                        color:[UIImage imageNamed:@"startStation"]];
     [waypoints_ addObject:startPoint];
+
+    CLLocationCoordinate2D createEndLocation = CLLocationCoordinate2DMake(self.item.lati, self.item.longi);
     
-    NSString *startPositionString = [[NSString alloc] initWithFormat:@"%f,%f", locationManager.location.coordinate.latitude, locationManager.location.coordinate.longitude];
-    [waypointStrings_ addObject:startPositionString];
+    NSString *destinationName;
     
-    GMSMarker *endPoint = [[GMSMarker alloc] init];
-    endPoint.position = CLLocationCoordinate2DMake(self.item.lati, self.item.longi);
-    endPoint.title = self.item.searchQuery;
-    endPoint.icon = [GMSMarker markerImageWithColor:[UIColor redColor]];
-    endPoint.map = mapView_;
+    if ([[self.item.searchQuery componentsSeparatedByString:@","] objectAtIndex:0]) {
+        destinationName = [[self.item.searchQuery componentsSeparatedByString:@","] objectAtIndex:0];
+    } else {
+        destinationName = self.item.searchQuery;
+    };
+
+    GMSMarker *endPoint = [GMSMarkerFactory createGMSMarker:createEndLocation
+                                                    mapView:mapView_
+                                                      title:destinationName
+                                                      color:[UIImage imageNamed:@"endStation"]];
     [waypoints_ addObject:endPoint];
-    
-    NSString *endPositionString = [[NSString alloc] initWithFormat:@"%f,%f", self.item.lati, self.item.longi];
-    [waypointStrings_ addObject:endPositionString];
-    
-    NSURL *url = [NSURL URLWithString:@"http://www.citibikenyc.com/stations/json"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response,
-                                               NSData *data, NSError *connectionError)
-     {
-         if (data.length > 0 && connectionError == nil)
-         {
-             NSDictionary *greeting = [NSJSONSerialization JSONObjectWithData:data
-                                                                      options:0
-                                                                        error:NULL];
-             NSArray *stations = [greeting objectForKey:@"stationBeanList"];
-             CLLocationDistance smallestDistance = DBL_MAX;
-             CLLocation *closestLocation;
-             NSDictionary *closestStation;
-             
-             CLLocation *closestEndLocation;
-             NSDictionary *closestEndStation;
-             
-             for(id st in stations) {
-                 NSDictionary *station      = (NSDictionary *)st;
-                 NSString *stationLatitude  = [station objectForKey:@"latitude"];
-                 NSString *stationLongitude = [station objectForKey:@"longitude"];
-                 
-                 CLLocation *bikeStop = [[CLLocation alloc] initWithLatitude:[stationLatitude doubleValue] longitude:[stationLongitude doubleValue]];
-                 CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:startPosition.latitude longitude:startPosition.longitude];
-                 
-                 NSMutableArray *locations = [[NSMutableArray alloc] init];
-                 [locations addObject:bikeStop];
-                 
-                 for (CLLocation *location in locations) {
-                     CLLocationDistance distance = [currentLocation distanceFromLocation:location];
-                     
-                     if (distance < smallestDistance) {
-                         smallestDistance    = distance;
-                         closestLocation     = location;
-                         closestStation      = station;
-                     }
-                 }
-                 
-                 CLLocation *endLocation = [[CLLocation alloc] initWithLatitude:self.item.lati longitude:self.item.longi];
-                 
-                 for (CLLocation *endStationlocation in locations) {
-                     CLLocationDistance distance = [endLocation distanceFromLocation:endStationlocation];
-                     
-                     if (distance < smallestDistance) {
-                         smallestDistance    = distance;
-                         closestEndLocation  = endStationlocation;
-                         closestEndStation   = station;
-                     }
-                 }
-             }
-             
-             NSString *title            = [closestStation objectForKey:@"stationName"];
-             NSString *availableBikes   = [[closestStation objectForKey:@"availableBikes"] stringValue];
-             NSNumber *numBikes         = @([[closestStation objectForKey:@"availableBikes"] intValue]);
-             
-             GMSMarker *startStation  = [[GMSMarker alloc] init];
-             
-             if ([numBikes intValue] > 0) {
-                 startStation.icon    = [GMSMarker markerImageWithColor:[UIColor greenColor]];
-                 startStation.snippet = availableBikes;
-             } else {
-                 startStation.icon    = [GMSMarker markerImageWithColor:[UIColor redColor]];
-                 startStation.snippet = @"No bikes available at this location.";
-             };
-             
-             startStation.title       = title;
-             startStation.position    = closestLocation.coordinate;
-             startStation.map         = mapView_;
-             
+
+    NSArray *stations = appDel.stationJSON;
+
+             NSDictionary *closestStation = [StationFinder findClosestStation:stations location:currentLocation];
+             CLLocationCoordinate2D closestStationLocation = CLLocationCoordinate2DMake(
+                 [[closestStation objectForKey:@"latitude"] doubleValue],
+                 [[closestStation objectForKey:@"longitude"] doubleValue]);
+
+             NSNumber *numberOfBikes = @([[closestStation objectForKey:@"availableBikes"] intValue]);
+
+             GMSMarker *startStation  = [GMSMarkerFactory createGMSMarkerForStation:closestStationLocation
+                                                                  mapView:mapView_
+                                                                    title:[closestStation objectForKey:@"stationName"]
+                                                         availableSnippet:@"Bicycles available"
+                                                       unavailableSnippet:@"No bicycles available at this location."
+                                                            numberOfBikes:numberOfBikes];
              [waypoints_ addObject:startStation];
-             NSString *startStationString = [[NSString alloc] initWithFormat:@"%f,%f", closestLocation.coordinate.latitude, closestLocation.coordinate.longitude];
-             [waypointStrings_ addObject:startStationString];
-             
-             NSString *endTitle            = [closestStation objectForKey:@"stationName"];
-             NSString *availableEndBikes   = [[closestStation objectForKey:@"availableBikes"] stringValue];
-             NSNumber *numEndBikes         = @([[closestStation objectForKey:@"availableBikes"] intValue]);
-             
-             GMSMarker *endStation  = [[GMSMarker alloc] init];
-             
-             if ([numEndBikes intValue] > 0) {
-                 endStation.icon    = [GMSMarker markerImageWithColor:[UIColor greenColor]];
-                 endStation.snippet = availableEndBikes;
-             } else {
-                 endStation.icon    = [GMSMarker markerImageWithColor:[UIColor redColor]];
-                 endStation.snippet = @"No bikes available at this location.";
-             };
-             
-             endStation.title       = endTitle;
-             endStation.position    = closestEndLocation.coordinate;
-             endStation.map         = mapView_;
-             
+
+             CLLocation *endLocation = [[CLLocation alloc] initWithLatitude:createEndLocation.latitude
+                                                                  longitude:createEndLocation.longitude];
+
+             NSDictionary *closestEndStation = [StationFinder findClosestStation:stations location:endLocation];
+             CLLocationCoordinate2D closestEndStationLocation =
+             CLLocationCoordinate2DMake([[closestEndStation objectForKey:@"latitude"] doubleValue],
+                                        [[closestEndStation objectForKey:@"longitude"] doubleValue]);
+
+             NSNumber *availableDocks = @([[closestStation objectForKey:@"availableDocks"] intValue]);
+
+             GMSMarker *endStation  = [GMSMarkerFactory createGMSMarkerForStation:closestEndStationLocation
+                                                                mapView:mapView_
+                                                                  title:[closestEndStation objectForKey:@"stationName"]
+                                                       availableSnippet:@"Docks available"
+                                                     unavailableSnippet:@"No docks available at this location."
+                                                          numberOfBikes:availableDocks];
              [waypoints_ addObject:endStation];
-             NSString *endStationString = [[NSString alloc] initWithFormat:@"%f,%f", closestEndLocation.coordinate.latitude, closestEndLocation.coordinate.longitude];
-             [waypointStrings_ addObject:endStationString];
-             
-             NSString *sensor = @"false";
-             NSArray *parameters = [NSArray arrayWithObjects:sensor, waypointStrings_, nil];
-             NSArray *keys = [NSArray arrayWithObjects:@"sensor", @"waypoints", nil];
+
+             NSMutableArray *markerStrings = [[NSMutableArray alloc] init];
+             for(GMSMarker *waypoint in waypoints_){
+                 [markerStrings addObject:[[NSString alloc] initWithFormat:@"%f,%f", waypoint.position.latitude, waypoint.position.longitude]];
+             }
+
+             NSArray *keys = [NSArray arrayWithObjects: @"waypoints", nil];
+             NSArray *parameters = [NSArray arrayWithObjects: markerStrings, nil];
              NSDictionary *query = [NSDictionary dictionaryWithObjects:parameters
                                                                forKeys:keys];
+
              MDDirectionService *mds=[[MDDirectionService alloc] init];
              SEL selector = @selector(addDirections:);
              [mds setDirectionsQuery:query
                         withSelector:selector
                         withDelegate:self];
          }
-     }];
-}
 
 - (void)addDirections:(NSDictionary *)json {
+    NSDictionary *routes;
+    if ([json objectForKey:@"routes"][0]) {
+        routes = [json objectForKey:@"routes"][0];
+    } else {
+        [ErrorMessage renderErrorMessage:@"No routes found. Please reword your query with a full street address." cancelButtonTitle:@"OK" error:nil];
+    }
     
-    NSDictionary *routes = [json objectForKey:@"routes"][0];
-    
+
     NSDictionary *route = [routes objectForKey:@"overview_polyline"];
     NSString *overview_route = [route objectForKey:@"points"];
     GMSPath *path = [GMSPath pathFromEncodedPath:overview_route];
     GMSPolyline *polyline = [GMSPolyline polylineWithPath:path];
+    polyline.strokeWidth = 3.f;
     polyline.map = mapView_;
 }
 
-
-
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

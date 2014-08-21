@@ -30,6 +30,7 @@
 }
 
 - (NSString *)description {
+    
     return [NSString stringWithFormat:@"Query URL: %@", [self googleURLString]];
 }
 

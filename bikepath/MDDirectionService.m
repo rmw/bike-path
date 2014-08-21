@@ -8,7 +8,7 @@
 
 #import "MDDirectionService.h"
 
-@implementation MDDirectionService{
+@implementation MDDirectionService {
     @private
     BOOL _sensor;
     BOOL _alternatives;
@@ -18,28 +18,16 @@
 
 static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/directions/json?mode=bicycling";
 
-- (void)setDirectionsQuery:(NSDictionary *)query withSelector:(SEL)selector withDelegate:(id)delegate{
+- (void)setDirectionsQuery:(NSDictionary *)query withSelector:(SEL)selector withDelegate:(id)delegate {
     NSArray *waypoints = [query objectForKey:@"waypoints"];
-    NSString *origin = [waypoints objectAtIndex:0];
-    int waypointCount = [waypoints count];
-    int destinationPos = waypointCount -1;
-    NSString *destination = [waypoints objectAtIndex:destinationPos];
-    NSString *sensor = [query objectForKey:@"sensor"];
-    NSMutableString *url = [NSMutableString stringWithFormat:@"%@&origin=%@&destination=%@&sensor=%@",
-                            kMDDirectionsURL, origin, destination, sensor];
-    
-    if(waypointCount>2) {
-        [url appendString: @"&waypoints="];
-        int wpCount = waypointCount-1;
-        for(int i=1;i<wpCount;i++){
-            [url appendString: @"|"];
-            [url appendString:[waypoints objectAtIndex:i]];
-        }
-    }
-    url = [url stringByAddingPercentEscapesUsingEncoding: NSASCIIStringEncoding];
+
+    NSString *url = [NSMutableString stringWithFormat:@"%@&origin=%@&destination=%@&sensor=true&waypoints=%@|%@", kMDDirectionsURL, [waypoints objectAtIndex:0], [waypoints objectAtIndex:1], [waypoints objectAtIndex:2], [waypoints objectAtIndex:3]];
+
+    url            = [url stringByAddingPercentEscapesUsingEncoding: NSASCIIStringEncoding];
     _directionsURL = [NSURL URLWithString:url];
     [self retrieveDirections:selector withDelegate:delegate];
 }
+
 - (void)retrieveDirections:(SEL)selector withDelegate:(id)delegate{
     dispatch_async(dispatch_get_main_queue(), ^{
         NSData* data = [NSData dataWithContentsOfURL:_directionsURL];
@@ -49,8 +37,7 @@ static NSString *kMDDirectionsURL = @"http://maps.googleapis.com/maps/api/direct
 
 - (void)fetchedData:(NSData *)data
        withSelector:(SEL)selector
-       withDelegate:(id)delegate{
-
+       withDelegate:(id)delegate {
     NSError* error;
     NSDictionary *json = [NSJSONSerialization
                           JSONObjectWithData:data

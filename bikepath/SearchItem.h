@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
-#import <GoogleMaps/GoogleMaps.h>
 
 @interface SearchItem : NSObject
 

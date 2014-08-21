@@ -34,8 +34,7 @@
 
 #pragma mark Lifecycle
 
-- (instancetype)initWithPlaceId:(NSString *)placeId
-{
+- (instancetype)initWithPlaceId:(NSString *)placeId {
     if ([placeId length] == 0) {
         NSLog(@"WARNING: Trying to create FTGooglePlacesAPIDetailRequest with empty placeId. Returning nil");
         return nil;
@@ -50,20 +49,17 @@
 
 #pragma mark - Superclass overrides
 
-- (NSString *)description
-{
+- (NSString *)description {
     return [NSString stringWithFormat:@"<%@: %p> Place ID: %@", [self class], self, _placeId];
 }
 
 #pragma mark - FTGooglePlacesAPIRequest protocol
 
-- (NSString *)placesAPIRequestMethod
-{
+- (NSString *)placesAPIRequestMethod {
     return @"details";
 }
 
-- (NSDictionary *)placesAPIRequestParams
-{
+- (NSDictionary *)placesAPIRequestParams {
     if (_placeId) {
         return @{@"placeid": _placeId};
     }
@@ -75,8 +71,7 @@
 
 #pragma mark - Deprecations
 
-- (instancetype)initWithReference:(NSString *)reference
-{
+- (instancetype)initWithReference:(NSString *)reference {
     if ([reference length] == 0) {
         NSLog(@"WARNING: Trying to create FTGooglePlacesAPIDetailRequest with empty reference. Returning nil");
         return nil;
